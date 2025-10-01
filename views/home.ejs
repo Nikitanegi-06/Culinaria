@@ -1,0 +1,128 @@
+<%- include('partials/header') %>
+
+<!-- HERO SECTION -->
+<section class="hero">
+  <div class="hero-content">
+    <h1 class="hero-title">Savor the Flavor, One Recipe at a Time</h1>
+
+    <div class="hero-buttons">
+      <a href="/recipes/new" class="btn primary">Let's Get Grillin’</a>
+      <a href="/about" class="btn secondary">Grill Master's Guide →</a>
+    </div>
+
+    <!-- ✅ Changed method to GET and query param to 'q' -->
+    <form action="/search" method="GET" class="hero-search">
+      <i class="fa-solid fa-magnifying-glass search-icon"></i>
+      <input type="text" name="q" placeholder="What are you craving today?" required />
+      <button type="submit">SEARCH</button>
+    </form>
+  </div>
+</section>
+
+<!-- TRENDING DISHES -->
+<section class="trending-section container">
+  <h2 class="section-title">Trending</h2>
+  <div class="trending-wrapper">
+    
+
+    <div class="trending-slider" id="slider">
+      <% const trending = [
+        { time: '1hr 20min', title: 'Lobster Macaroni and Cheese', img: 'https://townsquare.media/site/394/files/2023/05/attachment-tina-witherspoon-A8Gze997X-E-unsplash.jpg' },
+        { time: '15min', title: 'Crispy Brussels Sprouts', img: 'https://www.paleorunningmomma.com/wp-content/uploads/2022/04/smashed-brussels-sprouts-8.jpg' },
+        { time: '45min', title: 'Ricotta Gnocchi', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0VyqRGNbqL9FzDPXgIZ1lCyletGbNHIrsKA&s' },
+        { time: '30min', title: 'Grilled Veggie Platter', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQmOPf0XPCpucg0sfysHzAmkWIR1FxiMSnlA&s' },
+        { time: '20min', title: 'Avocado Toast', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqZIsZLCPbwjLwjpZAVJRAxTLVQC8qhYLw4g&s' },
+        { time: '40min', title: 'Paneer Tikka', img: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhWEwWfozDKGmqySOPdhysUBUJCBHRs9mpH3nEa5NBYVcl9ZiDyDg-9kLoVt38CT7d3aSNgKVal6HTqEKdIYiOZl0J3J7SAxSKiRlx1QMHxwSR2PO8i0KbeYxNFP_v5BD70k1zUqvDnJ9BH/s1600/Paneer_Tikka_5.jpg' },
+        { time: '35min', title: 'Veg Pasta', img: 'https://www.inspiredtaste.net/wp-content/uploads/2019/02/Vegetable-Spaghetti-Recipe-2-1200.jpg' },
+        { time: '25min', title: 'Tomato Soup', img: 'https://cdn.loveandlemons.com/wp-content/uploads/2023/01/tomato-soup-recipe.jpg' },
+        { time: '10min', title: 'Fruit Bowl', img: 'https://tastesbetterfromscratch.com/wp-content/uploads/2017/06/Fresh-Fruit-Bowl-1.jpg' }
+      ]; %>
+
+      <% trending.forEach(dish => { %>
+        <div class="trending-card">
+          <div class="trending-image-container">
+            <img src="<%= dish.img %>" alt="<%= dish.title %>">
+            <div class="time-badge"><%= dish.time %></div>
+            <div class="bookmark-icon">
+              <i class="fa-solid fa-bookmark"></i>
+            </div>
+          </div>
+          <div class="rating-stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star-half-stroke"></i>
+            <i class="fa-regular fa-star"></i>
+          </div>
+          <div class="dish-title"><%= dish.title %></div>
+        </div>
+      <% }) %>
+    </div>
+
+  </div>
+</section>
+
+<!-- MEAL CATEGORY SECTION -->
+<section class="meal-section container">
+  <h2 class="section-title">Pick Your Meal</h2>
+  <div class="meal-grid">
+    <% const categories = ['Breakfast', 'Brunch', 'Lunch', 'Snack', 'Dinner', 'Dessert']; %>
+    <% categories.forEach(cat => { %>
+      <button class="meal-btn" data-category="<%= cat %>">
+        <span><%= cat %></span>
+      </button>
+    <% }) %>
+  </div>
+</section>
+
+<!-- API RESULTS -->
+<section class="container">
+  <div id="meal-results" class="recipes-grid"></div>
+</section>
+
+
+
+<%- include('partials/footer') %>
+
+<!-- API Fetch Script -->
+<script>
+  async function loadMeals(category) {
+    const res = await fetch(`/api/meal?q=${category}`);
+    const meals = await res.json();
+    const container = document.getElementById('meal-results');
+    container.innerHTML = '';
+
+    if (!meals.length) {
+      container.innerHTML = '<p>No meals found for this category.</p>';
+      return;
+    }
+
+    meals.forEach(meal => {
+      const card = document.createElement('div');
+      card.className = 'recipe-card';
+      card.innerHTML = `
+        <img src="${meal.image}" alt="${meal.title}" />
+        <h3>${meal.title}</h3>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  document.querySelectorAll('.meal-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const category = btn.dataset.category;
+      loadMeals(category);
+    });
+  });
+
+  function scrollTrending(direction) {
+    const slider = document.getElementById('slider');
+    const cardWidth = slider.querySelector('.trending-card').offsetWidth + 24;
+    slider.scrollBy({
+      left: direction * cardWidth * 2,
+      behavior: 'smooth'
+    });
+  }
+</script>
+
+

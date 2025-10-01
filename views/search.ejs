@@ -1,0 +1,24 @@
+<%- include('partials/header') %>
+
+<main class="container">
+  <h2 class="page-title">Search Results</h2>
+
+  <% if (results && results.length > 0) { %>
+    <div class="recipes-grid">
+      <% results.forEach(item => { %>
+        <div class="recipe-card">
+          <% if (item.image) { %>
+            <img src="<%= item.image %>" alt="<%= item.name %>" class="recipe-img" />
+          <% } %>
+          <h3><%= item.name %></h3>
+          <p><strong>Category:</strong> <%= item.category || "N/A" %></p>
+          <a href="/recipe/<%= item.type %>/<%= item.id %>" class="btn small">View Recipe</a>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p>No recipes found</p>
+  <% } %>
+</main>
+
+<%- include('partials/footer') %>

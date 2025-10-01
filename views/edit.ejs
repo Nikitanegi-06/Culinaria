@@ -1,0 +1,23 @@
+<%- include('partials/header') %>
+
+<section class="container">
+  <h1 class="page-title">Edit Recipe</h1>
+
+  <form action="/recipes/<%= recipe._id %>?_method=PUT" method="POST" class="form">
+    <label for="name">Recipe Name</label>
+    <input type="text" name="name" id="name" value="<%= recipe.name %>" required />
+
+    <label for="ingredients">Ingredients (comma separated)</label>
+    <input type="text" name="ingredients" id="ingredients" value="<%= recipe.ingredients.join(', ') %>" required />
+
+    <label for="steps">Steps</label>
+    <textarea name="steps" id="steps" rows="6" required><%= recipe.steps %></textarea>
+
+    <label for="image">Image URL</label>
+    <input type="text" name="image" id="image" value="<%= recipe.image %>" />
+
+    <button type="submit" class="btn green-btn">Update Recipe</button>
+  </form>
+</section>
+
+<%- include('partials/footer')

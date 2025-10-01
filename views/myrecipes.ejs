@@ -1,0 +1,74 @@
+<%- include('partials/header') %>
+
+<div class="container mt-5">
+  <h2 class="mb-4 text-center fw-bold">🍲 My Recipes</h2>
+
+  <% if (!recipes || recipes.length === 0) { %>
+    <div class="text-center">
+      <p class="text-muted fs-5">You haven’t added any recipes yet.</p>
+    </div>
+  <% } else { %>
+    <div class="row">
+      <% recipes.forEach(recipe => { %>
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card shadow-sm h-100 border-0 rounded-4 overflow-hidden" style="padding: 15px;">
+
+            <!-- Recipe Name (Moved Above Image) -->
+            <h4 class="card-title text-primary fw-bold mb-3 text-center" style="font-size: 1.3rem;">
+              <%= recipe.name || "Untitled Recipe" %>
+            </h4>
+
+            <!-- Recipe Image -->
+            <div class="recipe-image-wrapper text-center">
+              <% if (recipe.image) { %>
+                <img src="<%= recipe.image %>" 
+                     alt="<%= recipe.name %>" 
+                     style="width: 300px; height: 260px; object-fit: fit; border-radius: 10px; margin-bottom: 15px;">
+              <% } else { %>
+                <img src="https://via.placeholder.com/400x250?text=No+Image" 
+                     alt="No image" 
+                     style="width: 100%; height: 260px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
+              <% } %>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body" style="padding: 10px;">
+              <!-- Ingredients -->
+              <h6 class="fw-bold">🥕 Ingredients:</h6>
+              <% if (recipe.ingredients && recipe.ingredients.length > 0) { %>
+                <ul class="list-unstyled small">
+                  <% recipe.ingredients.forEach(ingredient => { %>
+                    <li>✔️ <%= ingredient %></li>
+                  <% }) %>
+                </ul>
+              <% } else { %>
+                <p class="text-muted">No ingredients listed.</p>
+              <% } %>
+
+              <!-- Steps -->
+              <h6 class="fw-bold">📖 Steps:</h6>
+              <% if (recipe.steps && typeof recipe.steps === "string") { %>
+                <p class="small"><%= recipe.steps %></p>
+              <% } else { %>
+                <p class="text-muted">No instructions available.</p>
+              <% } %>
+            </div>
+
+            <!-- Delete Button -->
+            <div class="card-footer bg-white border-0 text-center">
+              <form action="/recipes/<%= recipe._id %>?_method=DELETE" method="POST" 
+                    onsubmit="return confirm('Are you sure you want to delete this recipe?');">
+                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill">
+                  🗑️ Delete
+                </button>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

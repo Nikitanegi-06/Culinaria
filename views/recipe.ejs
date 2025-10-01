@@ -1,0 +1,34 @@
+<%- include('partials/header') %>
+
+<main class="container recipe-container">
+  <h1 class="recipe-title"><%= recipe.strMeal || recipe.strDrink %></h1>
+
+  <div class="recipe-image-wrapper">
+    <img src="<%= recipe.strMealThumb || recipe.strDrinkThumb %>" alt="Recipe Image" class="recipe-image">
+  </div>
+
+  <h2>🥗 Ingredients</h2>
+  <ul class="ingredients-list">
+    <% for (let i = 1; i <= 20; i++) { 
+        const ingredient = recipe["strIngredient" + i];
+        const measure = recipe["strMeasure" + i];
+        if (ingredient && ingredient.trim() !== "") { %>
+      <li><%= ingredient %> - <%= measure %></li>
+    <% }} %>
+  </ul>
+
+  <h2>👨‍🍳 Instructions</h2>
+  <p class="instructions"><%= recipe.strInstructions %></p>
+
+  <% if (recipe.strYoutube) { %>
+    <h2>🎥 Video Tutorial</h2>
+    <div class="video-wrapper">
+      <iframe width="560" height="315" 
+              src="https://www.youtube.com/embed/<%= recipe.strYoutube.split('v=')[1] %>" 
+              frameborder="0" allowfullscreen>
+      </iframe>
+    </div>
+  <% } %>
+</main>
+
+<%- include('partials/footer') %>

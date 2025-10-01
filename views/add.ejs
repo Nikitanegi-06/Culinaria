@@ -1,0 +1,64 @@
+<%- include('partials/header') %>
+
+<section class="container add-recipe-container">
+  <div class="form-card">
+    <h1 class="page-title">➕ Add a New Recipe</h1>
+
+    <form action="/recipes" method="POST" class="recipe-form">
+      
+      <!-- Recipe Name -->
+      <div class="form-group">
+        <label for="name">🍴 Recipe Name</label>
+        <input 
+          type="text" 
+          name="name" 
+          id="name" 
+          placeholder="Enter recipe name..." 
+          required 
+        />
+      </div>
+
+      <!-- Ingredients -->
+      <div class="form-group">
+        <label for="ingredients">🥕 Ingredients</label>
+        <input 
+          type="text" 
+          name="ingredients" 
+          id="ingredients" 
+          placeholder="e.g. Tomato, Onion, Cheese..." 
+          required 
+        />
+        <small class="form-hint">Add ingredients separated by commas</small>
+      </div>
+
+      <!-- Steps -->
+      <div class="form-group">
+        <label for="steps">📖 Steps</label>
+        <textarea 
+          name="steps" 
+          id="steps" 
+          rows="6" 
+          placeholder="Write step by step instructions..." 
+          required></textarea>
+      </div>
+
+      <!-- Image -->
+      <div class="form-group">
+        <label for="image">🖼️ Image URL</label>
+        <input 
+          type="text" 
+          name="image" 
+          id="image" 
+          placeholder="Paste an image URL (optional)" 
+        />
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-actions">
+        <button type="submit" class="btn green-btn">✅ Add Recipe</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
