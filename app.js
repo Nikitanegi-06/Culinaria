@@ -3,28 +3,34 @@ const express = require('express');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const path = require('path');
-const fetch = require('node-fetch');
 const Recipe = require('./models/recipe');
 
 const app = express();
 
-// Connect MongoDB
-mongoose.connect(process.env.MONGO_URI)
+// ✅ Connect MongoDB Atlas
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
   .then(() => console.log("MongoDB Connected"))
-  .catch(err => console.log(err));
+  .catch(err => console.error("MongoDB Error:", err));
 
-// Middleware setup
+// ✅ Middleware setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Routes
 // ✅ Home route
 app.get('/', async (req, res) => {
-  const recipes = await Recipe.find();
-  res.render('home', { recipes });
+  try {
+    const recipes = await Recipe.find();
+    res.render('home', { recipes });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error fetching recipes");
+  }
 });
 
 // ✅ Add new recipe form
@@ -35,10 +41,9 @@ app.get('/recipes/new', (req, res) => {
 app.post('/recipes', async (req, res) => {
   try {
     const { name, ingredients, steps, image } = req.body;
-
     const newRecipe = new Recipe({
       name,
-      ingredients: ingredients.split(',').map(item => item.trim()), 
+      ingredients: ingredients.split(',').map(item => item.trim()),
       steps,
       image
     });
@@ -47,7 +52,7 @@ app.post('/recipes', async (req, res) => {
     res.redirect('/myrecipes');
   } catch (err) {
     console.error(err);
-    res.send("Error saving recipe");
+    res.status(500).send("Error saving recipe");
   }
 });
 
@@ -155,5 +160,5 @@ app.get('/api/meal', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+// ✅ Export app for Vercel
+module.exports = app;
